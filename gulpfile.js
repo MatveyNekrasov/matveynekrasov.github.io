@@ -9,6 +9,7 @@ import minmax from "postcss-media-minmax";
 import autoprefixer from "autoprefixer";
 import csso from "postcss-csso";
 import sync from "browser-sync";
+import ghpages from "gh-pages"; // deploy
 
 // HTML
 
@@ -77,6 +78,18 @@ export const paths = () => {
         .pipe(gulp.dest("dist"));
 };
 
+// Watch
+
+export const watch = () => {
+    gulp.watch("src/*.html", gulp.series(html, paths));
+    gulp.watch("src/styles/**/*.css", gulp.series(styles));
+    gulp.watch("src/scripts/**/*.js", gulp.series(scripts));
+    gulp.watch([
+        "src/fonts/**/*",
+        "src/images/**/*",
+    ], gulp.series(copy));
+};
+
 // Server
 
 export const server = () => {
@@ -89,16 +102,8 @@ export const server = () => {
     });
 };
 
-// Watch
-
-export const watch = () => {
-    gulp.watch("src/*.html", gulp.series(html, paths));
-    gulp.watch("src/styles/**/*.css", gulp.series(styles));
-    gulp.watch("src/scripts/**/*.js", gulp.series(scripts));
-    gulp.watch([
-        "src/fonts/**/*",
-        "src/images/**/*",
-    ], gulp.series(copy));
+export const deploy = () => {
+    return ghpages.publish("dist", () => { });
 };
 
 // Default
